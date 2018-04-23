@@ -414,7 +414,76 @@ public class Picture extends SimplePicture
     }
   }
   
-  
+  public void sharpen (int x, int y, int w, int h)
+  {
+	    Pixel leftPixel = null;
+	    int count = 0;
+	    int blue1=0;
+	    int blue2=0;
+	    Pixel[][] pixels = this.getPixels2D();
+	    
+	    // loop through the rows
+	    for (int row = y; row < h; row++)
+	    {
+	      // loop from 13 to just before the mirror point
+	      for (int col = x; col < w; col++)
+	      {
+	    	  
+	    	  blue1=(pixels[row][col].getBlue()-pixels[row-1][col].getBlue())/2;
+	    	  blue2=(pixels[row][col].getBlue()-pixels[row][col-1].getBlue())/2;
+	    	  
+	    	  
+	    	  if (pixels[row][col].getBlue()+blue1+blue2>255)
+	    	  {
+	    		  pixels[row][col].setBlue(255);
+	    	  }
+	    	  else if(pixels[row][col].getBlue()+blue1+blue2<0)
+	    	  {
+	    		  pixels[row][col].setBlue(0);
+	    	  }
+	    	  else
+	    	  {
+	    		  pixels[row][col].setBlue(pixels[row][col].getBlue()+blue1+blue2);
+	    	  }
+	    	  
+	    	  blue1=(pixels[row][col].getRed()-pixels[row-1][col].getRed())/2;
+	    	  blue2=(pixels[row][col].getRed()-pixels[row][col-1].getRed())/2;
+	    	  
+	    	  
+	    	  if (pixels[row][col].getRed()+blue1+blue2>255)
+	    	  {
+	    		  pixels[row][col].setRed(255);
+	    	  }
+	    	  else if(pixels[row][col].getRed()+blue1+blue2<0)
+	    	  {
+	    		  pixels[row][col].setRed(0);
+	    	  }
+	    	  else
+	    	  {
+	    		  pixels[row][col].setRed(pixels[row][col].getRed()+blue1+blue2);
+	    	  }
+	    	  
+	    	  blue1=(pixels[row][col].getGreen()-pixels[row-1][col].getGreen())/2;
+	    	  blue2=(pixels[row][col].getGreen()-pixels[row][col-1].getGreen())/2;
+	    	  
+	    	  
+	    	  if (pixels[row][col].getGreen()+blue1+blue2>255)
+	    	  {
+	    		  pixels[row][col].setGreen(255);
+	    	  }
+	    	  else if(pixels[row][col].getGreen()+blue1+blue2<0)
+	    	  {
+	    		  pixels[row][col].setGreen(0);
+	    	  }
+	    	  else
+	    	  {
+	    		  pixels[row][col].setGreen(pixels[row][col].getGreen()+blue1+blue2);
+	    	  }
+	        count++;
+	      }
+	    }
+	    System.out.println(count);
+	  }
   /* Main method for testing - each class in Java can have a main 
    * method 
    */
