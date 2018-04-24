@@ -355,13 +355,13 @@ public class Picture extends SimplePicture
 	    Pixel[][] toPixels = this.getPixels2D();
 	    Pixel[][] fromPixels = fromPic.getPixels2D();
 	    for (int fromRow = 0, toRow = startRow; 
-	         fromRow < fromPixels.length &&
-	         toRow < toPixels.length; 
+	         fromRow < endRow &&
+	         toRow < endRow; 
 	         fromRow++, toRow++)
 	    {
 	      for (int fromCol = 0, toCol = startCol; 
-	           fromCol < fromPixels[0].length &&
-	           toCol < toPixels[0].length;  
+	           fromCol < endCol &&
+	           toCol < endCol;  
 	           fromCol++, toCol++)
 	      {
 	        fromPixel = fromPixels[fromRow][fromCol];
@@ -386,7 +386,24 @@ public class Picture extends SimplePicture
     this.mirrorVertical();
     this.write("collage.jpg");
   }
-  
+  public void createMyCollage()
+  {
+	    Picture flower1 = new Picture("flower1.jpg");
+	    Picture flower2 = new Picture("flower2.jpg");
+	    this.copy(flower1,0,0,100,50);
+	    this.copy(flower2,100,0);
+	    flower1.grayscale();
+	    this.copy(flower1,200,0);
+	    Picture flowerNoBlue = new Picture(flower2);
+	    flowerNoBlue.zeroBlue();
+	    this.copy(flowerNoBlue,300,0);
+	    this.copy(flower1,400,0);
+	    Picture flowerGray= new Picture(flower1);
+	    flowerGray.mirrorDiagonal();
+	    this.copy(flowerGray,450,0);
+	    this.mirrorVertical();
+	    this.write("collage.jpg");
+	  }
   
   /** Method to show large changes in color 
     * @param edgeDist the distance for finding edges
@@ -414,9 +431,49 @@ public class Picture extends SimplePicture
     }
   }
   
+  public void edgeDetection2(int edgeDist)
+  {
+    Pixel leftPixel = null;
+    Pixel rightPixel = null;
+    Pixel topPixel = null;
+    Pixel[][] pixels = this.getPixels2D();
+    Color rightColor = null;
+    Color topColor = null;
+    for (int row = 0; row < pixels.length; row++)
+    {
+      for (int col = 0; 
+           col < pixels[0].length-1; col++)
+      {
+        leftPixel = pixels[row][col];
+        rightPixel = pixels[row][col+1];
+        
+        rightColor = rightPixel.getColor();
+        
+        if (leftPixel.colorDistance(rightColor) > 
+            edgeDist)
+          leftPixel.setColor(Color.BLACK);
+        else
+          leftPixel.setColor(Color.WHITE);
+
+      }
+    }
+    for (int col=0;col<pixels[0].length;col++)
+    {
+    	for (int row=0;row<pixels.length-1;row++)
+    	{
+    		leftPixel = pixels[row][col];
+    		topPixel =pixels[row+1][col];
+    	    topColor = topPixel.getColor();
+    	    if (leftPixel.colorDistance(topColor) > 
+    		edgeDist)
+    		leftPixel.setColor(Color.BLACK);
+    	}
+    }
+    
+  }
+  
   public void sharpen (int x, int y, int w, int h)
   {
-	    Pixel leftPixel = null;
 	    int count = 0;
 	    int blue1=0;
 	    int blue2=0;
