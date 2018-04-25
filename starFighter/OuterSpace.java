@@ -22,9 +22,13 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
 	private Ship ship;
 	private Alien alienOne;
 	private Alien alienTwo;
+	private String AlienDirection="RIGHT";
 
-	private ArrayList<Alien> aliens;
+	private Alien[][] aliens;
 	private ArrayList<Ammo> shots;
+	private Ammo ammoBoi;
+	private int pellet=0;
+	private int reload=0;
 
 
 	private boolean[] keys;
@@ -32,14 +36,30 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
 
 	public OuterSpace()
 	{
+		ammoBoi=new Ammo(-100,-100,1);
+		
+		shots =new ArrayList<Ammo>();
+		for (int i=0;i<10;i++)
+		{
+			shots.add(ammoBoi);
+		}
+		
 		setBackground(Color.black);
 
 		keys = new boolean[5];
 
-		ship=new Ship(100,100,1);
+		ship=new Ship(100,100,2);
 		
-		alienOne=new Alien(100,100,1);
-		alienTwo=new Alien(100,200,1);
+		aliens=new Alien[5][2];
+		for (int c=0;c<aliens.length;c++)
+		{
+			for (int r=0;r<aliens[0].length;r++)
+			{
+				alienOne=new Alien(c*100+100,r*100+100,1);
+				aliens[c][r]=alienOne;
+			}
+		}
+		
 
 		this.addKeyListener(this);
 		new Thread(this).start();
@@ -54,6 +74,8 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
 
 	public void paint( Graphics window )
 	{
+		
+		
 		//set up the double buffering to make the game animation nice and smooth
 		Graphics2D twoDGraph = (Graphics2D)window;
 
@@ -65,11 +87,57 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
 		//create a graphics reference to the back ground image
 		//we will draw all changes on the background image
 		Graphics graphToBack = back.createGraphics();
-
+		
 		graphToBack.setColor(Color.BLUE);
 		graphToBack.drawString("StarFighter ", 25, 50 );
 		graphToBack.setColor(Color.BLACK);
 		graphToBack.fillRect(0,0,800,600);
+		for (Ammo s:shots)
+		{
+			s.draw(graphToBack);
+			
+		}
+		if (reload>0)
+		{
+			reload--;
+		}
+		for (Ammo s:shots)
+		{
+			if (s.getY()<600&&s.getY()>0)
+			{
+				s.move("UP");
+			}
+		}
+		
+		for (int r=0;r<aliens.length;r++)
+		{
+			for (int c=0;c<aliens[0].length;c++)
+			{
+				aliens[r][c].draw(graphToBack);
+				if (shots.get(pellet).getX()>aliens[r][c].getX()
+						&&shots.get(pellet).getX()<aliens[r][c].getX()+80
+						&&shots.get(pellet).getY()>aliens[r][c].getY()
+						&&shots.get(pellet).getY()<aliens[r][c].getY()+80)
+				{
+					aliens[r][c].setY(-100);
+					shots.get(pellet).setY(-100);
+				}
+				if (aliens[r][c].getX()<800&&aliens[r][c].getX()>0)
+				{
+					aliens[r][c].move(AlienDirection);
+				}
+				if (aliens[r][c].getX()>700)
+				{
+					AlienDirection="LEFT";
+				}
+				if (aliens[r][c].getX()<100)
+				{
+					AlienDirection="RIGHT";
+				}
+			}
+		}
+		
+		
 		ship.draw(graphToBack);
 
 		if(keys[0] == true)
@@ -87,6 +155,19 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
 		if(keys[3] == true)
 		{
 			ship.move("DOWN");
+		}
+		if(keys[4] == true)
+		{
+			if (reload==0)
+			{
+				shots.get(pellet).setPos(ship.getX()+35, ship.getY());
+				pellet++;
+				reload=100;
+			}
+			if (pellet>shots.size()-1)
+			{
+				pellet=0;
+			}
 		}
 
 
