@@ -104,9 +104,11 @@ public class Tetris extends Canvas implements KeyListener, Runnable
 			dmoved--;
 		}
 		
-		if (selectedy>18)
+		if (selectedy>7)
 		{
-			System.out.println("aaaaaaaaaa hooked on a feeling");
+			selectedx=5;
+			selectedy=0;
+			selected=false;
 		}
 		
 		
@@ -155,11 +157,14 @@ public class Tetris extends Canvas implements KeyListener, Runnable
 				moved=100;
 			}
 		}
-		if(keys[1] == true&&blockBoi.getX()<340)
+		if(keys[1] == true)
 		{
-			if (moved==0)
+			if (moved==0&&selectedx<9)
 			{
-				blockBoi.move("RIGHT");
+				blockActive[selectedx][selectedy].move("RIGHT");
+				activated[selectedx][selectedy]=0;
+				activated[selectedx+1][selectedy]=1;
+				selectedx++;
 				moved=100;
 			}
 		}
