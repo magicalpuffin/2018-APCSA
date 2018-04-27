@@ -112,13 +112,13 @@ public class Block extends MovingThing implements Locatable
    public void draw(Graphics window)
    {
      window.setColor(color);
-     window.drawRect(this.getX(), this.getY(), getWidth(), getHeight());
+     window.fillRect(this.getX(), this.getY(), getWidth(), getHeight());
    }
 
    public void draw(Graphics window, Color col)
    {
      window.setColor(col);
-     window.drawRect(this.getX(), this.getY(), getWidth(), getHeight());
+     window.fillRect(this.getX(), this.getY(), getWidth(), getHeight());
      
    }
    

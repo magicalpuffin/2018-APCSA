@@ -16,18 +16,33 @@ public class Tetris extends Canvas implements KeyListener, Runnable
 	private BufferedImage back;
 	private int p1=0;
 	private int p2=0;
+	
 	private Block blockBoi;
+	private int blockIndex=0;
 	private int moved=0;
 	private int dmoved=0;
-	private Block[][] blockArray;
-	private int[][] blockHit;
+	private Block[][] blockBoiz;
+	private Block[][] blockActive;
+	private int[][] activated;
+	private boolean selected=false;
+	private int selectedx=5;
+	private int selectedy=0;
 
 
 	public Tetris()
 	{
-		blockBoi=new Block(160,0,40,40);
+		//blockBoi=new Block(200,0,40,40);
 		
-		
+		blockActive=new Block[10][20];
+		activated=new int[10][20];
+		for (int r=0;r<blockActive.length;r++)
+		{
+			for (int c=0;c<blockActive[0].length;c++)
+			{
+				blockActive[r][c]=new Block(r*40,c*40,40,40);
+				activated[r][c]=0;
+			}
+		}
 
 
 
@@ -61,10 +76,48 @@ public class Tetris extends Canvas implements KeyListener, Runnable
 		graphToBack.setColor(Color.BLACK);
 		graphToBack.drawString(p1+":"+p2, 400, 100);
 		graphToBack.setColor(Color.WHITE);
-		graphToBack.fillRect(0, 0, 400, 800);
+		graphToBack.fillRect(0, 0, 420, 800);
 		
-		blockBoi.draw(graphToBack);
-		if (dmoved==0)
+		for (int r=0;r<blockActive.length;r++)
+		{
+			for (int c=0;c<blockActive[0].length;c++)
+			{
+				if (activated[r][c]==1)
+				{
+					blockActive[r][c].draw(graphToBack);
+				}
+			}
+		}
+		
+		if (blockActive[selectedx][selectedy].getY()<700&&dmoved==0)
+		{
+			activated[selectedx][selectedy]=0;
+			activated[selectedx][selectedy+1]=1;
+			blockActive[selectedx][selectedy].draw(graphToBack);
+			blockActive[selectedx][selectedy].move("DOWN");
+			selectedy++;
+			dmoved=100;
+		}
+		
+		if (dmoved>0)
+		{
+			dmoved--;
+		}
+		
+		if (selectedy>18)
+		{
+			System.out.println("aaaaaaaaaa hooked on a feeling");
+		}
+		
+		
+		if (selected==false)
+		{
+			selected=true;
+			activated[selectedx][selectedy]=1;
+		}
+		
+		/*blockBoi.draw(graphToBack);
+		if (dmoved==0&&blockBoi.getY()<700)
 		{
 			blockBoi.move("DOWN");
 			dmoved=100;
@@ -78,26 +131,31 @@ public class Tetris extends Canvas implements KeyListener, Runnable
 		{
 			moved--;
 		}
-		if (blockBoi.getY()>800)
+		if (blockBoi.getY()>700)
 		{
-			blockBoi.move("STOP");
+			System.out.println("aaaaaaaaaa hooked on a feeling");
 		}
-
+		*/
 
 		//see if the paddles need to be moved
 
 
-		
-
+		if (moved>0)
+		{
+			moved--;
+		}
 		if(keys[0] == true)
 		{
-			if (moved==0)
+			if (moved==0&&selectedx>0)
 			{
-				blockBoi.move("LEFT");
+				blockActive[selectedx][selectedy].move("LEFT");
+				activated[selectedx][selectedy]=0;
+				activated[selectedx-1][selectedy]=1;
+				selectedx--;
 				moved=100;
 			}
 		}
-		if(keys[1] == true)
+		if(keys[1] == true&&blockBoi.getX()<340)
 		{
 			if (moved==0)
 			{
