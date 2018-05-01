@@ -19,8 +19,11 @@ public class Tetris extends Canvas implements KeyListener, Runnable
 	
 	private Block blockBoi;
 	private int blockIndex=0;
+	
 	private int moved=0;
 	private int dmoved=0;
+	private int rotated=0;
+	
 	private Block[][] blockBoiz;
 	private Block[][] blockActive;
 	private int[][] activated;
@@ -33,7 +36,9 @@ public class Tetris extends Canvas implements KeyListener, Runnable
 
 	public Tetris()
 	{
-		blockBoi=new Block(200,0,40,40);
+		//blockBoi=new THICCBlock(200,0,80,80);
+		//blockBoi=new Block(200,0,40,40);
+		blockBoi=new THINNBlock(200,0,40,160);
 		
 		blockActive=new Block[10][20];
 		activated=new int[10][20];
@@ -133,37 +138,17 @@ public class Tetris extends Canvas implements KeyListener, Runnable
 		{
 			dmoved--;
 		}
-		
 		if (moved>0)
 		{
 			moved--;
 		}
-		if (blockBoi.getY()>700)
+		if (rotated>0)
 		{
-
-			for (int r=0;r<blockActive.length;r++)
-			{
-				for (int c=0;c<blockActive[0].length;c++)
-				{
-					if (blockActive[r][c].getX()==blockBoi.getX()&&blockActive[r][c].getY()==blockBoi.getY())
-					{
-						activated[r][c]=1;
-					}
-				}
-			}
-			blockBoi.setY(0);
+			rotated--;
 		}
-		for (int r=0;r<blockActive.length;r++)
-		{
-			for (int c=0;c<blockActive[0].length;c++)
-			{
-				if (blockActive[r][c].getX()==blockBoi.getX()&&blockActive[r][c].getY()==blockBoi.getY()&&activated[r][c+1]==1)
-				{
-					activated[r][c]=1;
-					blockBoi.setY(0);
-				}
-			}
-		}
+		
+		blockBoi.hitBottom(blockActive, activated);
+		blockBoi.collided(blockActive, activated);
 		
 
 		//see if the paddles need to be moved
@@ -191,10 +176,10 @@ public class Tetris extends Canvas implements KeyListener, Runnable
 		}
 		if(keys[2] == true)
 		{
-			if (moved==0)
+			if (rotated==0)
 			{
-				blockBoi.move("UP");
-				moved=100;
+				blockBoi.rotate();
+				rotated=50;
 			}
 		}
 		if(keys[3] == true)

@@ -2,7 +2,7 @@ package Tetris;
 import java.awt.Color;
 import java.awt.Graphics;
 
-public class THICCBlock extends MovingThing implements Locatable
+public class THICCBlock extends Block implements Locatable
 {
 	private int xPos;
 	private int yPos;
@@ -120,6 +120,44 @@ public class THICCBlock extends MovingThing implements Locatable
      window.setColor(col);
      window.fillRect(this.getX(), this.getY(), getWidth(), getHeight());
      
+   }
+   public void hitBottom(Block[][] blockActive, int[][] activated)
+   {
+	   if (getY()>660)
+	   {
+		   for (int r=0;r<blockActive.length;r++)
+			{
+				for (int c=0;c<blockActive[0].length;c++)
+				{
+					if (blockActive[r][c].getX()==getX()&&blockActive[r][c].getY()==getY())
+					{
+						activated[r][c]=1;
+						activated[r][c+1]=1;
+						activated[r+1][c]=1;
+						activated[r+1][c+1]=1;
+						setY(0);
+					}
+				}
+			}
+	   }
+	   
+   }
+   public void collided(Block[][] blockActive, int[][] activated)
+   {
+	   for (int r=0;r<blockActive.length;r++)
+		{
+			for (int c=0;c<blockActive[0].length;c++)
+			{
+				if (blockActive[r][c].getX()==getX()&&blockActive[r][c].getY()==getY()&&(activated[r][c+2]==1||activated[r+1][c+2]==1))
+				{
+					activated[r][c]=1;
+					activated[r][c+1]=1;
+					activated[r+1][c]=1;
+					activated[r+1][c+1]=1;
+					setY(0);
+				}
+			}
+		}
    }
    
 	public boolean equals(Object obj)
