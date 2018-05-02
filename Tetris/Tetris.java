@@ -95,6 +95,26 @@ public class Tetris extends Canvas implements KeyListener, Runnable
 				}
 			}
 		}
+		int test=0;
+		for (int c=0;c<blockActive[0].length;c++)
+		{
+			for (int r=0;r<blockActive.length;r++)
+			{
+				if (activated[r][c]==1)
+				{
+					test++;
+				}
+			}
+			if (test==10)
+			{
+				for (int r=0;r<blockActive.length;r++)
+				{
+					activated[r][c]=0;
+				}
+			}
+			test=0;
+		}
+		
 		/*
 		if (blockActive[selectedx][selectedy].getY()<700&&dmoved==0)
 		{
@@ -160,7 +180,7 @@ public class Tetris extends Canvas implements KeyListener, Runnable
 		}
 		if(keys[0] == true)
 		{
-			if (moved==0)
+			if (moved==0&&blockBoi.getX()>0)
 			{
 				blockBoi.move("LEFT");
 				moved=100;
@@ -168,7 +188,7 @@ public class Tetris extends Canvas implements KeyListener, Runnable
 		}
 		if(keys[1] == true)
 		{
-			if (moved==0)
+			if (moved==0&&blockBoi.inBoundRight())
 			{
 				blockBoi.move("RIGHT");
 				moved=100;
@@ -176,7 +196,7 @@ public class Tetris extends Canvas implements KeyListener, Runnable
 		}
 		if(keys[2] == true)
 		{
-			if (rotated==0)
+			if (rotated==0&&blockBoi.canRotate())
 			{
 				blockBoi.rotate();
 				rotated=50;

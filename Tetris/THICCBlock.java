@@ -159,6 +159,14 @@ public class THICCBlock extends Block implements Locatable
 			}
 		}
    }
+   public boolean inBoundRight()
+   {
+	   if (getX()<300)
+	   {
+		   return true;
+	   }
+	   return false;
+   }
    
 	public boolean equals(Object obj)
 	{

@@ -125,6 +125,10 @@ public class Block extends MovingThing implements Locatable
    {
 	   
    }
+   public boolean canRotate()
+   {
+	   return true;
+   }
    public void hitBottom(Block[][] blockActive, int[][] activated)
    {
 	   if (getY()>700)
@@ -155,6 +159,14 @@ public class Block extends MovingThing implements Locatable
 				}
 			}
 		}
+   }
+   public boolean inBoundRight()
+   {
+	   if (getX()<360)
+	   {
+		   return true;
+	   }
+	   return false;
    }
 	public boolean equals(Object obj)
 	{

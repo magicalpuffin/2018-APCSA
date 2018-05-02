@@ -136,6 +136,14 @@ public class THINNBlock extends Block implements Locatable
 		   orientation=0;
 	   }
    }
+   public boolean canRotate()
+   {
+	   if (getX()<280)
+	   {
+		   return true;
+	   }
+	   return false;
+   }
    public void hitBottom(Block[][] blockActive, int[][] activated)
    {
 	   if (getY()>580&&orientation==0)
@@ -210,6 +218,25 @@ public class THINNBlock extends Block implements Locatable
 				}
 			}
 	   }
+   }
+   public boolean inBoundRight()
+   {
+	   if (orientation==0)
+	   {
+		   if (getX()<360)
+		   {
+			   return true;
+		   }
+	   }
+	   else if (orientation==1)
+	   {
+		   if (getX()<240)
+		   {
+			   return true;
+		   }
+	   }
+	   
+	   return false;
    }
    
 	public boolean equals(Object obj)
