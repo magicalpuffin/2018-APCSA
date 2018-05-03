@@ -27,6 +27,7 @@ public class Tetris extends Canvas implements KeyListener, Runnable
 	private Block[][] blockBoiz;
 	private Block[][] blockActive;
 	private int[][] activated;
+	private int[][] update;
 	private boolean selected=false;
 	private int selectedx=5;
 	private int selectedy=0;
@@ -42,6 +43,7 @@ public class Tetris extends Canvas implements KeyListener, Runnable
 		
 		blockActive=new Block[10][20];
 		activated=new int[10][20];
+		update=new int [10][20];
 		for (int r=0;r<blockActive.length;r++)
 		{
 			for (int c=0;c<blockActive[0].length;c++)
@@ -111,7 +113,17 @@ public class Tetris extends Canvas implements KeyListener, Runnable
 				{
 					activated[r][c]=0;
 				}
+				for (int y=0;y<c;y++)
+				{
+					for (int r=0;r<blockActive.length;r++)
+					{
+						update[r][y]=0;
+						update[r][y]=1;
+						System.out.println(""+r+" "+y);
+					}
+				}
 			}
+			
 			test=0;
 		}
 		
