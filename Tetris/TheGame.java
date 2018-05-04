@@ -9,7 +9,7 @@ public class TheGame extends JFrame
 
 	public TheGame()
 	{
-		super("PONG");
+		super("Tetris");
 		setSize(WIDTH,HEIGHT);
 		
 		Tetris game = new Tetris();

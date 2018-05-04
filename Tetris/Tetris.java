@@ -113,15 +113,19 @@ public class Tetris extends Canvas implements KeyListener, Runnable
 				{
 					activated[r][c]=0;
 				}
-				for (int y=0;y<c;y++)
+				update=activated;
+				for (int y=c-1;y>0;y--)
 				{
 					for (int r=0;r<blockActive.length;r++)
 					{
-						update[r][y]=0;
-						update[r][y]=1;
-						System.out.println(""+r+" "+y);
+						if (update[r][y]==1)
+						{
+							update[r][y]=0;
+							update[r][y+1]=1;
+						}
 					}
 				}
+				activated=update;
 			}
 			
 			test=0;
@@ -219,7 +223,7 @@ public class Tetris extends Canvas implements KeyListener, Runnable
 			if (moved==0)
 			{
 				blockBoi.move("DOWN");
-				moved=100;
+				moved=25;
 			}
 		}
 
