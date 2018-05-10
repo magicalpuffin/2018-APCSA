@@ -14,8 +14,9 @@ public class Tetris extends Canvas implements KeyListener, Runnable
 {
 	private boolean[] keys;
 	private BufferedImage back;
-	private int p1=0;
-	private int p2=0;
+	private int score=0;
+	private int multiplier=0;
+	private boolean mainMenu=false;
 	
 	private Block blockBoi;
 	private int blockIndex=0;
@@ -24,7 +25,7 @@ public class Tetris extends Canvas implements KeyListener, Runnable
 	private int dmoved=0;
 	private int rotated=0;
 	
-	private Block[][] blockBoiz;
+	private Block[] blockBoiz=new Block[100];
 	private Block[][] blockActive;
 	private int[][] activated;
 	private int[][] update;
@@ -37,9 +38,24 @@ public class Tetris extends Canvas implements KeyListener, Runnable
 
 	public Tetris()
 	{
-		//blockBoi=new THICCBlock(200,0,80,80);
-		//blockBoi=new Block(200,0,40,40);
-		blockBoi=new THINNBlock(200,0,40,160);
+		for(int i=0;i<blockBoiz.length;i++)
+		{
+			int r=(int) (Math.random()*3);
+			if (r==0)
+			{
+				blockBoiz[i]=new Block(200,0,40,40);
+				//blockBoiz[i]=new LBlockRight();
+			}
+			else if(r==1)
+			{
+				blockBoiz[i]=new THINNBlock(200,0,40,160);
+			}
+			else if (r==2)
+			{
+				blockBoiz[i]=new THICCBlock(200,0,80,80);
+			}
+		}
+		
 		
 		blockActive=new Block[10][20];
 		activated=new int[10][20];
@@ -82,152 +98,162 @@ public class Tetris extends Canvas implements KeyListener, Runnable
 		Graphics graphToBack = back.createGraphics();
 
 		
-		graphToBack.setColor(Color.BLACK);
-		graphToBack.drawString(p1+":"+p2, 400, 100);
 		graphToBack.setColor(Color.WHITE);
 		graphToBack.fillRect(0, 0, 420, 800);
+		graphToBack.setColor(Color.BLACK);
+		graphToBack.drawString("SCORE: "+score, 0, 10);
 		
-		for (int r=0;r<blockActive.length;r++)
-		{
-			for (int c=0;c<blockActive[0].length;c++)
-			{
-				if (activated[r][c]==1)
-				{
-					blockActive[r][c].draw(graphToBack);
-				}
-			}
-		}
-		int test=0;
-		for (int c=0;c<blockActive[0].length;c++)
+		if (mainMenu)
 		{
 			for (int r=0;r<blockActive.length;r++)
 			{
-				if (activated[r][c]==1)
+				for (int c=0;c<blockActive[0].length;c++)
 				{
-					test++;
+					if (activated[r][c]==1)
+					{
+						blockActive[r][c].draw(graphToBack);
+					}
 				}
 			}
-			if (test==10)
+			int test=0;
+			for (int c=0;c<blockActive[0].length;c++)
 			{
 				for (int r=0;r<blockActive.length;r++)
 				{
-					activated[r][c]=0;
+					if (activated[r][c]==1)
+					{
+						test++;
+					}
 				}
-				update=activated;
-				for (int y=c-1;y>0;y--)
+				if (test==10)
 				{
+					score+=10;
 					for (int r=0;r<blockActive.length;r++)
 					{
-						if (update[r][y]==1)
+						activated[r][c]=0;
+					}
+					update=activated;
+					for (int y=c-1;y>0;y--)
+					{
+						for (int r=0;r<blockActive.length;r++)
 						{
-							update[r][y]=0;
-							update[r][y+1]=1;
+							if (update[r][y]==1)
+							{
+								update[r][y]=0;
+								update[r][y+1]=1;
+							}
+						}
+					}
+					activated=update;
+				}
+				
+				test=0;
+			}
+			
+			for (int i=0;i<activated.length;i++)
+			{
+				if (activated[i][0]==1)
+				{
+					score=0;
+					for (int[] a:activated)
+					{
+						for (int u=0;u<a.length;u++)
+						{
+							a[u]=0;
 						}
 					}
 				}
-				activated=update;
 			}
 			
-			test=0;
-		}
-		
-		/*
-		if (blockActive[selectedx][selectedy].getY()<700&&dmoved==0)
-		{
-			activated[selectedx][selectedy]=0;
-			activated[selectedx][selectedy+1]=1;
-			blockActive[selectedx][selectedy].move("DOWN");
-			blockActive[selectedx][selectedy].draw(graphToBack);
-			selectedy++;
-			dmoved=100;
-		}
-		
-		if (dmoved>0)
-		{
-			dmoved--;
-		}
-		
-		if (selectedy>7)
-		{
-			selectedx=5;
-			selectedy=0;
-			dmoved=0;
-			selected=false;
-			System.out.println("Bottom");
-		}
-		
-		
-		if (selected==false)
-		{
-			selected=true;
-			activated[selectedx][selectedy]=1;
-		}
-		*/
-		
-		blockBoi.draw(graphToBack);
-		if (dmoved==0&&blockBoi.getY()<700)
-		{
-			blockBoi.move("DOWN");
-			dmoved=100;
-		}
-		if (dmoved>0)
-		{
-			dmoved--;
-		}
-		if (moved>0)
-		{
-			moved--;
-		}
-		if (rotated>0)
-		{
-			rotated--;
-		}
-		
-		blockBoi.hitBottom(blockActive, activated);
-		blockBoi.collided(blockActive, activated);
-		
-
-		//see if the paddles need to be moved
-
-
-		if (moved>0)
-		{
-			moved--;
-		}
-		if(keys[0] == true)
-		{
-			if (moved==0&&blockBoi.getX()>0)
+			blockBoiz[blockIndex].draw(graphToBack);
+			if (dmoved==0&&blockBoiz[blockIndex].getY()<700)
 			{
-				blockBoi.move("LEFT");
-				moved=100;
+				blockBoiz[blockIndex].move("DOWN");
+				dmoved=100;
+			}
+			if (dmoved>0)
+			{
+				dmoved--;
+			}
+			if (moved>0)
+			{
+				moved--;
+			}
+			if (rotated>0)
+			{
+				rotated--;
+			}
+			
+			if (blockBoiz[blockIndex].hitBottom(blockActive, activated))
+			{
+				blockIndex++;
+				if (blockIndex==3)
+				{
+					blockIndex=0;
+				}
+			}
+			if(blockBoiz[blockIndex].collided(blockActive, activated))
+			{
+				blockIndex++;
+				if (blockIndex==100)
+				{
+					blockIndex=0;
+				}
+			}
+			
+
+			//see if the paddles need to be moved
+
+
+			if (moved>0)
+			{
+				moved--;
+			}
+			if(keys[0] == true)
+			{
+				if (moved==0&&blockBoiz[blockIndex].getX()>0)
+				{
+					blockBoiz[blockIndex].move("LEFT");
+					moved=100;
+				}
+			}
+			if(keys[1] == true)
+			{
+				if (moved==0&&blockBoiz[blockIndex].inBoundRight())
+				{
+					blockBoiz[blockIndex].move("RIGHT");
+					moved=100;
+				}
+			}
+			if(keys[2] == true)
+			{
+				if (rotated==0&&blockBoiz[blockIndex].canRotate())
+				{
+					blockBoiz[blockIndex].rotate();
+					rotated=50;
+				}
+			}
+			if(keys[3] == true)
+			{
+				if (moved==0)
+				{
+					blockBoiz[blockIndex].move("DOWN");
+					moved=25;
+				}
 			}
 		}
-		if(keys[1] == true)
+		
+		if (!mainMenu)
 		{
-			if (moved==0&&blockBoi.inBoundRight())
+			if(keys[2] == true)
 			{
-				blockBoi.move("RIGHT");
-				moved=100;
+				mainMenu=true;
 			}
+			graphToBack.setColor(Color.BLACK);
+			graphToBack.drawString("TETRIS", 100, 10);
+			graphToBack.drawString("Michael Li, use arrow keys to move blocks,press up to start playing", 10, 50);
 		}
-		if(keys[2] == true)
-		{
-			if (rotated==0&&blockBoi.canRotate())
-			{
-				blockBoi.rotate();
-				rotated=50;
-			}
-		}
-		if(keys[3] == true)
-		{
-			if (moved==0)
-			{
-				blockBoi.move("DOWN");
-				moved=25;
-			}
-		}
-
-
+		
 
 
 

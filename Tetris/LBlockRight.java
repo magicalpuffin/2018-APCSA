@@ -4,10 +4,10 @@ import java.awt.Graphics;
 
 public class LBlockRight extends Block implements Locatable
 {
-	private int xPos;
-	private int yPos;
-	private int width;
-	private int height;
+	private int xPos=200;
+	private int yPos=0;
+	private int width=40;
+	private int height=120;
 	private int speed=1;
 	private int orientation=0;
 
@@ -15,40 +15,8 @@ public class LBlockRight extends Block implements Locatable
 
 	public LBlockRight()
 	{
-	  xPos=0;
-	  yPos=0;
-	  width=0;
-	  height=0;
 	  color=Color.BLACK;
 
-	}
-	
-	public LBlockRight(int x, int y)
-	{
-	  xPos=x;
-	  yPos=y;
-	  width=10;
-	  height=10;
-	  color=Color.BLACK;
-	}
-	
-	public LBlockRight(int x, int y, int width, int height)
-	{
-	  xPos=x;
-	  yPos=y;
-	  this.width=width;
-	  this.height=height;
-	  color=Color.BLACK;
-	}
-
-	//add other Block constructors - x , y , width, height, color
-	public LBlockRight(int x, int y, int width, int height, Color color)
-	{
-	  xPos=x;
-	  yPos=y;
-	  this.width=width;
-	  this.height=height;
-	  this.color=color;
 	}
 	
 	
@@ -112,8 +80,28 @@ public class LBlockRight extends Block implements Locatable
    }
    public void draw(Graphics window)
    {
-     window.setColor(color);
-     window.fillRect(this.getX(), this.getY(), getWidth(), getHeight());
+	   window.setColor(color);
+	   if (orientation==0)
+	   {
+		   window.fillRect(this.getX(), this.getY(), getWidth(), getHeight());
+		   window.fillRect(this.getX()+40, this.getY()+80, 40, 40);
+	   }
+	   if (orientation==1)
+	   {
+		   window.fillRect(this.getX(), this.getY(), getWidth(), getHeight());
+		   window.fillRect(this.getX(), this.getY()+40, 40, 40);
+	   }
+	   if (orientation==2)
+	   {
+		   window.fillRect(this.getX()+40, this.getY(), getWidth(), getHeight());
+		   window.fillRect(this.getX(), this.getY(), 40, 40);
+	   }
+	   if (orientation==3)
+	   {
+		   window.fillRect(this.getX(), this.getY(), getWidth(), getHeight());
+		   window.fillRect(this.getX()+80, this.getY()-40, 40, 40);
+	   }
+     
    }
 
    public void draw(Graphics window, Color col)
@@ -124,19 +112,37 @@ public class LBlockRight extends Block implements Locatable
    }
    public void rotate()
    {
-	   int temp=getWidth();
-	   setWidth(getHeight());
-	   setHeight(temp);
+	   int temp=0;
 	   if (orientation==0)
 	   {
+		   temp=getWidth();
+		   setWidth(getHeight());
+		   setHeight(temp);
 		   orientation=1;
 	   }
-	   else
+	   else if(orientation==1)
 	   {
+		   temp=getWidth();
+		   setWidth(getHeight());
+		   setHeight(temp);
+		   orientation=2;
+	   }
+	   else if(orientation==2)
+	   {
+		   temp=getWidth();
+		   setWidth(getHeight());
+		   setHeight(temp);
+		   orientation=3;
+	   }
+	   else if(orientation==3)
+	   {
+		   temp=getWidth();
+		   setWidth(getHeight());
+		   setHeight(temp);
 		   orientation=0;
 	   }
    }
-   public void hitBottom(Block[][] blockActive, int[][] activated)
+   public boolean hitBottom(Block[][] blockActive, int[][] activated)
    {
 	   if (getY()>580&&orientation==0)
 	   {
@@ -154,6 +160,7 @@ public class LBlockRight extends Block implements Locatable
 					}
 				}
 			}
+		   return true;
 	   }
 	   if (getY()>700&&orientation==1)
 	   {
@@ -171,10 +178,11 @@ public class LBlockRight extends Block implements Locatable
 					}
 				}
 			}
+		   return true;
 	   }
-	   
+	   return false;
    }
-   public void collided(Block[][] blockActive, int[][] activated)
+   public boolean collided(Block[][] blockActive, int[][] activated)
    {
 	   if (orientation==0)
 	   {
@@ -189,6 +197,7 @@ public class LBlockRight extends Block implements Locatable
 						activated[r][c+2]=1;
 						activated[r][c+3]=1;
 						setY(0);
+						return true;
 					}
 				}
 			}
@@ -206,10 +215,12 @@ public class LBlockRight extends Block implements Locatable
 						activated[r+2][c]=1;
 						activated[r+3][c]=1;
 						setY(0);
+						return true;
 					}
 				}
 			}
 	   }
+	   return false;
    }
    
 	public boolean equals(Object obj)

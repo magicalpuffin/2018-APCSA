@@ -129,7 +129,7 @@ public class Block extends MovingThing implements Locatable
    {
 	   return true;
    }
-   public void hitBottom(Block[][] blockActive, int[][] activated)
+   public boolean hitBottom(Block[][] blockActive, int[][] activated)
    {
 	   if (getY()>700)
 	   {
@@ -144,9 +144,11 @@ public class Block extends MovingThing implements Locatable
 					}
 				}
 			}
+		   return true;
 	   }
+	   return false;
    }
-   public void collided(Block[][] blockActive, int[][] activated)
+   public boolean collided(Block[][] blockActive, int[][] activated)
    {
 	   for (int r=0;r<blockActive.length;r++)
 		{
@@ -156,9 +158,11 @@ public class Block extends MovingThing implements Locatable
 				{
 					activated[r][c]=1;
 					setY(0);
+					return true;
 				}
 			}
 		}
+	   return false;
    }
    public boolean inBoundRight()
    {

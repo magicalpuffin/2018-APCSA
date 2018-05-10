@@ -144,7 +144,7 @@ public class THINNBlock extends Block implements Locatable
 	   }
 	   return false;
    }
-   public void hitBottom(Block[][] blockActive, int[][] activated)
+   public boolean hitBottom(Block[][] blockActive, int[][] activated)
    {
 	   if (getY()>580&&orientation==0)
 	   {
@@ -162,6 +162,7 @@ public class THINNBlock extends Block implements Locatable
 					}
 				}
 			}
+		   return true;
 	   }
 	   if (getY()>700&&orientation==1)
 	   {
@@ -179,10 +180,11 @@ public class THINNBlock extends Block implements Locatable
 					}
 				}
 			}
+		   return true;
 	   }
-	   
+	   return false;
    }
-   public void collided(Block[][] blockActive, int[][] activated)
+   public boolean collided(Block[][] blockActive, int[][] activated)
    {
 	   if (orientation==0)
 	   {
@@ -197,6 +199,7 @@ public class THINNBlock extends Block implements Locatable
 						activated[r][c+2]=1;
 						activated[r][c+3]=1;
 						setY(0);
+						return true;
 					}
 				}
 			}
@@ -214,10 +217,12 @@ public class THINNBlock extends Block implements Locatable
 						activated[r+2][c]=1;
 						activated[r+3][c]=1;
 						setY(0);
+						return true;
 					}
 				}
 			}
 	   }
+	   return false;
    }
    public boolean inBoundRight()
    {
