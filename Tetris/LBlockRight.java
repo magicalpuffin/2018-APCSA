@@ -113,38 +113,42 @@ public class LBlockRight extends Block implements Locatable
    public void rotate()
    {
 	   int temp=0;
-	   if (orientation==0)
+	   if (orientation==0&&getX()<320)
 	   {
 		   temp=getWidth();
 		   setWidth(getHeight());
 		   setHeight(temp);
 		   orientation=1;
+		   System.out.println("1");
 	   }
-	   else if(orientation==1)
+	   else if(orientation==1&&getX()<320)
 	   {
 		   temp=getWidth();
 		   setWidth(getHeight());
 		   setHeight(temp);
 		   orientation=2;
+		   System.out.println("2");
 	   }
-	   else if(orientation==2)
+	   else if(orientation==2&&getX()<320)
 	   {
 		   temp=getWidth();
 		   setWidth(getHeight());
 		   setHeight(temp);
 		   orientation=3;
+		   System.out.println("3");
 	   }
-	   else if(orientation==3)
+	   else if(orientation==3&&getX()<320)
 	   {
 		   temp=getWidth();
 		   setWidth(getHeight());
 		   setHeight(temp);
 		   orientation=0;
+		   System.out.println("0");
 	   }
    }
    public boolean hitBottom(Block[][] blockActive, int[][] activated)
    {
-	   if (getY()>580&&orientation==0)
+	   if (getY()>620&&orientation==0)
 	   {
 		   for (int r=0;r<blockActive.length;r++)
 			{
@@ -155,14 +159,32 @@ public class LBlockRight extends Block implements Locatable
 						activated[r][c]=1;
 						activated[r][c+1]=1;
 						activated[r][c+2]=1;
-						activated[r][c+3]=1;
+						activated[r+1][c+2]=1;
 						setY(0);
 					}
 				}
 			}
 		   return true;
 	   }
-	   if (getY()>700&&orientation==1)
+	   if (getY()>660&&orientation==1)
+	   {
+		   for (int r=0;r<blockActive.length;r++)
+			{
+				for (int c=0;c<blockActive[0].length;c++)
+				{
+					if (blockActive[r][c].getX()==getX()&&blockActive[r][c].getY()==getY())
+					{
+						activated[r][c]=1;
+						activated[r][c+1]=1;
+						activated[r+1][c]=1;
+						activated[r+2][c]=1;
+						setY(0);
+					}
+				}
+			}
+		   return true;
+	   }
+	   if (getY()>620&&orientation==2)
 	   {
 		   for (int r=0;r<blockActive.length;r++)
 			{
@@ -172,8 +194,26 @@ public class LBlockRight extends Block implements Locatable
 					{
 						activated[r][c]=1;
 						activated[r+1][c]=1;
+						activated[r+1][c+1]=1;
+						activated[r+1][c+2]=1;
+						setY(0);
+					}
+				}
+			}
+		   return true;
+	   }
+	   if (getY()>660&&orientation==3)
+	   {
+		   for (int r=0;r<blockActive.length;r++)
+			{
+				for (int c=0;c<blockActive[0].length;c++)
+				{
+					if (blockActive[r][c].getX()==getX()&&blockActive[r][c].getY()==getY())
+					{
+						activated[r][c+1]=1;
+						activated[r+1][c+1]=1;
+						activated[r+2][c+1]=1;
 						activated[r+2][c]=1;
-						activated[r+3][c]=1;
 						setY(0);
 					}
 				}
@@ -190,12 +230,12 @@ public class LBlockRight extends Block implements Locatable
 			{
 				for (int c=0;c<blockActive[0].length;c++)
 				{
-					if (blockActive[r][c].getX()==getX()&&blockActive[r][c].getY()==getY()&&(activated[r][c+4]==1))
+					if (blockActive[r][c].getX()==getX()&&blockActive[r][c].getY()==getY()&&((activated[r][c+3]==1)||(activated[r+1][c+3]==1)))
 					{
 						activated[r][c]=1;
 						activated[r][c+1]=1;
 						activated[r][c+2]=1;
-						activated[r][c+3]=1;
+						activated[r+1][c+2]=1;
 						setY(0);
 						return true;
 					}
@@ -208,18 +248,87 @@ public class LBlockRight extends Block implements Locatable
 			{
 				for (int c=0;c<blockActive[0].length;c++)
 				{
-					if (blockActive[r][c].getX()==getX()&&blockActive[r][c].getY()==getY()&&(activated[r][c+1]==1||activated[r+3][c+1]==1||activated[r+2][c+1]==1||activated[r+1][c+1]==1))
+					if (blockActive[r][c].getX()==getX()&&blockActive[r][c].getY()==getY()&&(activated[r][c+2]==1||activated[r+1][c+1]==1||activated[r+2][c+1]==1))
 					{
 						activated[r][c]=1;
+						activated[r][c+1]=1;
 						activated[r+1][c]=1;
 						activated[r+2][c]=1;
-						activated[r+3][c]=1;
 						setY(0);
 						return true;
 					}
 				}
 			}
 	   }
+	   if (orientation==2)
+	   {
+		   for (int r=0;r<blockActive.length;r++)
+			{
+				for (int c=0;c<blockActive[0].length;c++)
+				{
+					if (blockActive[r][c].getX()==getX()&&blockActive[r][c].getY()==getY()&&(activated[r][c+1]==1||activated[r+1][c+3]==1))
+					{
+						activated[r][c]=1;
+						activated[r+1][c]=1;
+						activated[r+1][c+1]=1;
+						activated[r+1][c+2]=1;
+						setY(0);
+						return true;
+					}
+				}
+			}
+	   }
+	   if (orientation==3)
+	   {
+		   for (int r=0;r<blockActive.length;r++)
+			{
+				for (int c=0;c<blockActive[0].length;c++)
+				{
+					if (blockActive[r][c].getX()==getX()&&blockActive[r][c].getY()==getY()&&(activated[r][c+2]==1||activated[r+1][c+2]==1||activated[r+2][c+2]==1))
+					{
+						activated[r][c+1]=1;
+						activated[r+1][c+1]=1;
+						activated[r+2][c+1]=1;
+						activated[r+2][c]=1;
+						setY(0);
+						return true;
+					}
+				}
+			}
+	   }
+	   return false;
+   }
+   public boolean inBoundRight()
+   {
+	   if (orientation==0)
+	   {
+		   if (getX()<320)
+		   {
+			   return true;
+		   }
+	   }
+	   else if (orientation==1)
+	   {
+		   if (getX()<280)
+		   {
+			   return true;
+		   }
+	   }
+	   else if (orientation==2)
+	   {
+		   if (getX()<320)
+		   {
+			   return true;
+		   }
+	   }
+	   else if (orientation==3)
+	   {
+		   if (getX()<280)
+		   {
+			   return true;
+		   }
+	   }
+	   
 	   return false;
    }
    

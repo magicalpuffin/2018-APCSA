@@ -43,8 +43,8 @@ public class Tetris extends Canvas implements KeyListener, Runnable
 			int r=(int) (Math.random()*3);
 			if (r==0)
 			{
-				blockBoiz[i]=new Block(200,0,40,40);
-				//blockBoiz[i]=new LBlockRight();
+				//blockBoiz[i]=new Block(200,0,40,40);
+				blockBoiz[i]=new LBlockRight();
 			}
 			else if(r==1)
 			{
